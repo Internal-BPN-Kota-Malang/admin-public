@@ -21,7 +21,7 @@
     padding: 24px 32px;
     background-image:
       linear-gradient(180deg, rgba(10,14,20,0.45) 0%, rgba(10,14,20,0.35) 50%, rgba(10,14,20,0.6) 100%),
-      url('malang.jpg');
+      url('images/malang.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

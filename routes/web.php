@@ -3,9 +3,61 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminAuthController;
 
+// ======================
+// ROUTE UNTUK USER (tanpa login)
+// ======================
+
 Route::get('/', function () {
-    return redirect('/admin/login');
-})->name('home');
+    return view('user.home');
+})->name('user.home');
+
+Route::get('/informasi', function () {
+    return view('user.informasi');
+})->name('user.informasi');
+
+Route::get('/tentang-kami', function () {
+    return view('user.tentang-kami');
+})->name('user.tentang-kami');
+
+// Pengajuan
+Route::get('/pengajuan', function () {
+    return view('user.pengajuan');
+})->name('user.pengajuan');
+
+Route::get('/pengajuan/data', function () {
+    return view('user.DataPengajuan');
+})->name('user.pengajuan.data');
+
+Route::get('/pengajuan/tambah', function () {
+    return view('user.TambahPengajuan');
+})->name('user.pengajuan.tambah');
+
+// Formulir Permohonan
+Route::get('/formulir-permohonan', function () {
+    return view('user.formulir-permohonan');
+})->name('user.formulir-permohonan');
+
+Route::get('/formulir-permohonan/tambah', function () {
+    return view('user.TambahFormulir');
+})->name('user.formulir-permohonan.tambah');
+
+Route::get('/formulir-ptsl', function () {
+    return view('user.formulir-PTSL');
+})->name('user.formulir-ptsl');
+
+// Surat-surat
+Route::get('/surat-kuasa', function () {
+    return view('user.surat-kuasa');
+})->name('user.surat-kuasa');
+
+Route::get('/surat-pernyataan', function () {
+    return view('user.surat-pernyataan');
+})->name('user.surat-pernyataan');
+
+
+// ======================
+// ROUTE UNTUK ADMIN (perlu login)
+// ======================
 
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.attempt');
@@ -35,7 +87,7 @@ Route::middleware('admin')->group(function () {
 
     Route::get('/admin/surat-kuasa', function () {
         return view('admin-surat-kuasa');
-    });
+    })->name('admin.surat-kuasa');
 
     Route::get('/admin/surat-pernyataan-keaslian-sertipikat', function () {
         return view('admin-surat-pernyataan-keaslian-sertipikat');

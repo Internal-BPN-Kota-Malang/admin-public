@@ -116,6 +116,162 @@
     color: #9fb2c9;
   }
 
+  /* ===== ACCORDION MENU (Pengolahan) ===== */
+  .nav-group {
+    margin-bottom: 2px;
+  }
+
+  .nav-group-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #dbe5f2;
+    text-align: left;
+    cursor: pointer;
+    padding: 11px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-group-toggle:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .nav-group-toggle .icon {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .nav-group-toggle .chevron {
+    margin-left: auto;
+    font-size: 11px;
+    transition: transform 0.2s ease;
+  }
+
+  .nav-group.open .nav-group-toggle .chevron {
+    transform: rotate(90deg);
+  }
+
+  .nav-group.open .nav-group-toggle {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+  }
+
+  .nav-submenu {
+    list-style: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    padding-left: 10px;
+  }
+
+  .nav-group.open > .nav-submenu {
+    max-height: 1200px;
+  }
+
+  .nav-subgroup.open > .nav-submenu {
+    max-height: 400px;
+  }
+
+  .nav-submenu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #b9c9dd;
+    text-decoration: none;
+    padding: 10px 12px 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 2px;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+  }
+
+  .nav-submenu a::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #6f89a6;
+  }
+
+  .nav-submenu a:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .nav-submenu a.active {
+    background: #26c6da;
+    color: #0c2338;
+    font-weight: 700;
+  }
+
+  .nav-submenu a.active::before {
+    background: #0c2338;
+  }
+
+  /* ===== Kategori di dalam menu induk (level ke-2) ===== */
+  .nav-subgroup {
+    margin-bottom: 2px;
+  }
+
+  .nav-subgroup-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #c3d3e6;
+    text-align: left;
+    cursor: pointer;
+    padding: 10px 12px 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-subgroup-toggle:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .nav-subgroup-toggle .chevron {
+    margin-left: auto;
+    font-size: 10px;
+    transition: transform 0.2s ease;
+  }
+
+  .nav-subgroup.open > .nav-subgroup-toggle .chevron {
+    transform: rotate(90deg);
+  }
+
+  .nav-subgroup.open > .nav-subgroup-toggle {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+  }
+
+  .nav-subgroup .nav-submenu {
+    padding-left: 14px;
+  }
+
+  .nav-subgroup .nav-submenu a {
+    font-size: 12.5px;
+    padding-left: 26px;
+  }
+
   /* ===== MAIN AREA ===== */
   .main {
     flex: 1;
@@ -426,22 +582,62 @@
       <div class="sidebar-section-title">Pengajuan Masuk</div>
       <li><a href="{{ url('/admin/pengajuan') }}"><span class="icon">📥</span> Semua Pengajuan</a></li>
 
-      <div class="sidebar-section-title">Formulir Utama</div>
-      <li><a href="{{ url('/admin/permohonan') }}"><span class="icon">📑</span> Formulir Permohonan</a></li>
-      <li><a href="{{ url('/admin/ptsl') }}"><span class="icon">🗺️</span> Formulir PTSL</a></li>
+      {{-- Satu menu induk yang membungkus SEMUA kategori layanan --}}
+      <li class="nav-group" id="groupLayanan">
+        <button type="button" class="nav-group-toggle" data-target="groupLayanan">
+          <span class="icon">🗂️</span>
+          <span>Pengolahan Layanan</span>
+          <span class="chevron">▶</span>
+        </button>
 
-      <div class="sidebar-section-title">Surat Pernyataan</div>
-      <li><a href="{{ url('/admin/surat-pernyataan') }}"><span class="icon">📚</span>Surat Pernyataan</a></li>
-      <li><a href="{{ url('/admin/surat-kuasa') }}"><span class="icon">📝</span> Surat Kuasa</a></li>
-      <li><a href="{{ url('/admin/surat-pernyataan-keaslian-sertipikat') }}"><span class="icon">📄</span> Keaslian Sertipikat</a></li>
-      <li><a href="{{ url('/admin/surat-pernyataan-pemasangan-tanda-batas') }}"><span class="icon">📐</span> Pemasangan Tanda Batas</a></li>
-      <li><a href="{{ url('/admin/surat-pernyataan-pelepasan') }}"><span class="icon">📋</span> Pelepasan</a></li>
-      <li><a href="{{ url('/admin/surat-pernyataan-penguasaan-fisik-perpanjangan') }}"><span class="icon">🏠</span> Penguasaan Fisik (Perpanjangan)</a></li>
-      <li><a href="{{ url('/admin/surat-pernyataan-penguasaan-fisik-hak-pertama') }}"><span class="icon">🏡</span> Penguasaan Fisik (Hak Pertama)</a></li>
+        <ul class="nav-submenu">
 
-      <div class="sidebar-section-title">Pajak</div>
-      <li><a href="{{ url('/admin/surat-bphtb') }}"><span class="icon">💰</span> Surat BPHTB</a></li>
-      <li><a href="{{ url('/admin/surat-pph') }}"><span class="icon">🧾</span> Surat PPH</a></li>
+          {{-- Kategori 1: Formulir --}}
+          <li class="nav-subgroup">
+            <button type="button" class="nav-subgroup-toggle">
+              <span class="icon">📑</span>
+              <span>Formulir</span>
+              <span class="chevron">▶</span>
+            </button>
+            <ul class="nav-submenu">
+              <li><a href="{{ url('/admin/permohonan') }}"><span class="icon">📑</span> Formulir Permohonan</a></li>
+              <li><a href="{{ url('/admin/ptsl') }}"><span class="icon">🗺️</span> Formulir PTSL</a></li>
+            </ul>
+          </li>
+
+          {{-- Kategori 2: Surat Pernyataan --}}
+          <li class="nav-subgroup">
+            <button type="button" class="nav-subgroup-toggle">
+              <span class="icon">📚</span>
+              <span>Surat Pernyataan</span>
+              <span class="chevron">▶</span>
+            </button>
+            <ul class="nav-submenu">
+              <li><a href="{{ url('/admin/surat-pernyataan') }}"><span class="icon">📚</span> Surat Pernyataan</a></li>
+              <li><a href="{{ url('/admin/surat-kuasa') }}"><span class="icon">📝</span> Surat Kuasa</a></li>
+              <li><a href="{{ url('/admin/surat-pernyataan-keaslian-sertipikat') }}"><span class="icon">📄</span> Keaslian Sertipikat</a></li>
+              <li><a href="{{ url('/admin/surat-pernyataan-pemasangan-tanda-batas') }}"><span class="icon">📐</span> Pemasangan Tanda Batas</a></li>
+              <li><a href="{{ url('/admin/surat-pernyataan-pelepasan') }}"><span class="icon">📋</span> Pelepasan</a></li>
+              <li><a href="{{ url('/admin/surat-pernyataan-penguasaan-fisik-perpanjangan') }}"><span class="icon">🏠</span> Penguasaan Fisik (Perpanjangan)</a></li>
+              <li><a href="{{ url('/admin/surat-pernyataan-penguasaan-fisik-hak-pertama') }}"><span class="icon">🏡</span> Penguasaan Fisik (Hak Pertama)</a></li>
+            </ul>
+          </li>
+
+          {{-- Kategori 3: Pajak --}}
+          <li class="nav-subgroup">
+            <button type="button" class="nav-subgroup-toggle">
+              <span class="icon">💰</span>
+              <span>Pajak</span>
+              <span class="chevron">▶</span>
+            </button>
+            <ul class="nav-submenu">
+              <li><a href="{{ url('/admin/surat-bphtb') }}"><span class="icon">💰</span> Surat BPHTB</a></li>
+              <li><a href="{{ url('/admin/surat-pph') }}"><span class="icon">🧾</span> Surat PPH</a></li>
+            </ul>
+          </li>
+
+        </ul>
+      </li>
 
       <div class="sidebar-section-title">Konten</div>
       <li><a href="{{ url('/admin/informasi') }}"><span class="icon">ℹ️</span> Informasi</a></li>
@@ -607,6 +803,40 @@
     row.addEventListener('click', () => {
       window.location = row.dataset.href;
     });
+  });
+
+  // ===== Accordion level 1: menu induk "Pengolahan Layanan" =====
+  document.querySelectorAll('.nav-group-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.closest('.nav-group');
+      group.classList.toggle('open');
+    });
+  });
+
+  // ===== Accordion level 2: kategori (Formulir / Surat Pernyataan / Pajak) =====
+  document.querySelectorAll('.nav-subgroup-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const subgroup = btn.closest('.nav-subgroup');
+      const isOpen = subgroup.classList.contains('open');
+
+      // Tutup kategori lain dulu supaya rapi (opsional, hanya 1 kategori terbuka)
+      document.querySelectorAll('.nav-subgroup.open').forEach(sg => {
+        if (sg !== subgroup) sg.classList.remove('open');
+      });
+
+      subgroup.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // Buka otomatis menu induk + kategori yang sesuai, kalau ada link aktif sesuai URL sekarang
+  document.querySelectorAll('.nav-submenu a').forEach(link => {
+    if (link.getAttribute('href') === window.location.pathname) {
+      link.classList.add('active');
+      const subgroup = link.closest('.nav-subgroup');
+      if (subgroup) subgroup.classList.add('open');
+      const group = link.closest('.nav-group');
+      if (group) group.classList.add('open');
+    }
   });
 </script>
 

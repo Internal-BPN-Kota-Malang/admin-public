@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulir Permohonan</title>
+<title>Beranda - Kantor Pertanahan</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -25,7 +25,7 @@
     padding: 40px 32px 90px;
     background-image:
       linear-gradient(180deg, rgba(10,14,20,0.55) 0%, rgba(10,14,20,0.35) 40%, rgba(10,14,20,0.75) 100%),
-      url('malang.jpg');
+      url('images/malang.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -288,7 +288,7 @@
   </div>
 
   <div class="hero-badge">
-    <img src="logobg.png" alt="Logo Kantor Pertanahan" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <img src="images/logobg.png" alt="Logo Kantor Pertanahan" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
     <div class="hero-badge-fallback" style="display:none;">Kantor<br>Pertanahan</div>
   </div>
 
