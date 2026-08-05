@@ -6,10 +6,21 @@
 <title>Formulir Permohonan</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+  }
   body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: #f5f6fa;
     color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .page-wrap {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
   }
 
   /* Hero strip dengan topbar & parallax */
@@ -68,13 +79,14 @@
   /* Kartu putih konten utama */
   .content-card {
     position: relative;
+    flex: 1 0 auto;
     max-width: 1250px;
+    width: 100%;
     margin: -80px auto 0;
     background: #fff;
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
     padding: 50px 32px 70px;
-    min-height: 60vh;
   }
 
   @media (max-width: 768px) {
@@ -124,6 +136,14 @@
   .surat-list {
     max-width: 1150px;
     margin: 0 auto;
+  }
+
+  .surat-note {
+    text-align: center;
+    font-size: 12.5px;
+    color: #9aa4af;
+    margin: -12px auto 20px;
+    max-width: 700px;
   }
 
   .surat-item {
@@ -313,6 +333,11 @@
     gap: 14px;
   }
 
+  .dokumen-card.dokumen-featured {
+    border: 1.5px solid #17b8c4;
+    box-shadow: 0 6px 20px rgba(23,184,196,0.12);
+  }
+
   .dokumen-card-head {
     display: flex;
     align-items: flex-start;
@@ -332,12 +357,30 @@
     flex-shrink: 0;
   }
 
+  .dokumen-featured .dokumen-icon {
+    background: #e6f9fb;
+    color: #0e8b95;
+  }
+
   .dokumen-nama {
     font-size: 14.5px;
     font-weight: 700;
     color: #1e2a3a;
     line-height: 1.4;
     padding-top: 6px;
+  }
+
+  .dokumen-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #0e8b95;
+    background: #e6f9fb;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 6px;
   }
 
   .dokumen-nama mark {
@@ -399,290 +442,457 @@
     fill: #d5dae0;
     margin-bottom: 12px;
   }
-
   @media (max-width: 700px) {
     .dokumen-grid { grid-template-columns: 1fr; }
+  }
+  /* ===== Tombol Lihat Persyaratan & status kunci ===== */
+  .dokumen-syarat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    background: #fff7e6;
+    color: #b8790a;
+    border: 1.5px dashed #f0c368;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 9px 12px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .dokumen-syarat-btn:hover { background: #fdecc8; border-color: #d99a1f; }
+  .dokumen-syarat-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .dokumen-card.syarat-read .dokumen-syarat-btn {
+    background: #eafaf0;
+    color: #1e8a4c;
+    border-style: solid;
+    border-color: #8fd9ac;
+  }
+  .dokumen-btn.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: not-allowed;
+    position: relative;
+  }
+  .syarat-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,20,30,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .syarat-modal-overlay.open { display: flex; }
+
+  .syarat-modal {
+    background: #fff;
+    border-radius: 18px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .syarat-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 22px 24px 14px;
+    border-bottom: 1px solid #eef0f3;
+  }
+
+  .syarat-modal-header h3 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #1e2a3a;
+    line-height: 1.4;
+  }
+
+  .syarat-modal-header p {
+    font-size: 12.5px;
+    color: #9aa4af;
+    margin-top: 4px;
+  }
+
+  .syarat-modal-close {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: #f1f3f6;
+    border-radius: 50%;
+    color: #7a8896;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .syarat-modal-close:hover { background: #e5e8ec; }
+
+  .syarat-modal-body {
+    padding: 18px 24px;
+    overflow-y: auto;
+  }
+
+  .syarat-modal-list {
+    list-style: none;
+  }
+
+  .syarat-modal-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: #333;
+    line-height: 1.5;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eef0f3;
+  }
+  .syarat-modal-list li:last-child { border-bottom: none; }
+
+  .syarat-modal-list li::before {
+    content: "✓";
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e6f9ee;
+    color: #1e8a4c;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .syarat-modal-footer {
+    padding: 16px 24px 22px;
+    border-top: 1px solid #eef0f3;
+  }
+
+  .syarat-modal-ack {
+    width: 100%;
+    background: linear-gradient(90deg, #17b8c4, #2f5a8a);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+  .syarat-modal-ack:hover { filter: brightness(1.08); }
+  .site-footer {
+    flex-shrink: 0;
   }
 </style>
 </head>
 <body>
 
-<section class="hero">
-  <div class="hero-topbar">
-    <div class="site-name">Kantor Pertanahan</div>
-    <div class="hero-social">
-      <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 4.9c-.8.4-1.7.6-2.6.8 1-.6 1.7-1.5 2-2.6-.9.5-1.9.9-3 1.1-.9-.9-2.1-1.5-3.4-1.5-2.6 0-4.7 2.1-4.7 4.7 0 .4 0 .7.1 1-3.9-.2-7.4-2.1-9.7-4.9-.4.7-.6 1.5-.6 2.3 0 1.6.8 3 2.1 3.9-.8 0-1.5-.2-2.1-.6v.1c0 2.3 1.6 4.2 3.8 4.6-.4.1-.8.2-1.2.2-.3 0-.6 0-.8-.1.6 1.9 2.3 3.2 4.4 3.3-1.6 1.3-3.6 2-5.8 2-.4 0-.8 0-1.1-.1 2.1 1.3 4.5 2.1 7.1 2.1 8.5 0 13.1-7 13.1-13.1v-.6c.9-.6 1.7-1.4 2.3-2.3z"/></svg></a>
-      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
-      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .2 2.4.4.6.2 1 .6 1.5 1 .4.4.7.9 1 1.5.2.4.3 1.2.4 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 2-.4 2.4-.2.6-.6 1-1 1.5-.4.4-.9.7-1.5 1-.4.2-1.2.3-2.4.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.2-2.4-.4-.6-.2-1-.6-1.5-1-.4-.4-.7-.9-1-1.5-.2-.4-.3-1.2-.4-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-2 .4-2.4.2-.6.6-1 1-1.5.4-.4.9-.7 1.5-1 .4-.2 1.2-.3 2.4-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.6.2-1.9.3-.5.2-.8.4-1.2.8-.4.4-.6.7-.8 1.2-.1.3-.3.9-.3 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1 .2 1.6.3 1.9.2.5.4.8.8 1.2.4.4.7.6 1.2.8.3.1.9.3 1.9.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.6-.2 1.9-.3.5-.2.8-.4 1.2-.8.4-.4.6-.7.8-1.2.1-.3.3-.9.3-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.6-.3-1.9-.2-.5-.4-.8-.8-1.2-.4-.4-.7-.6-1.2-.8-.3-.1-.9-.3-1.9-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4zm5.7-2a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z"/></svg></a>
+<div class="page-wrap">
+
+  <section class="hero">
+    <div class="hero-topbar">
+      <div class="site-name">Kantor Pertanahan</div>
+      <div class="hero-social">
+        <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 4.9c-.8.4-1.7.6-2.6.8 1-.6 1.7-1.5 2-2.6-.9.5-1.9.9-3 1.1-.9-.9-2.1-1.5-3.4-1.5-2.6 0-4.7 2.1-4.7 4.7 0 .4 0 .7.1 1-3.9-.2-7.4-2.1-9.7-4.9-.4.7-.6 1.5-.6 2.3 0 1.6.8 3 2.1 3.9-.8 0-1.5-.2-2.1-.6v.1c0 2.3 1.6 4.2 3.8 4.6-.4.1-.8.2-1.2.2-.3 0-.6 0-.8-.1.6 1.9 2.3 3.2 4.4 3.3-1.6 1.3-3.6 2-5.8 2-.4 0-.8 0-1.1-.1 2.1 1.3 4.5 2.1 7.1 2.1 8.5 0 13.1-7 13.1-13.1v-.6c.9-.6 1.7-1.4 2.3-2.3z"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .2 2.4.4.6.2 1 .6 1.5 1 .4.4.7.9 1 1.5.2.4.3 1.2.4 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 2-.4 2.4-.2.6-.6 1-1 1.5-.4.4-.9.7-1.5 1-.4.2-1.2.3-2.4.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.2-2.4-.4-.6-.2-1-.6-1.5-1-.4-.4-.7-.9-1-1.5-.2-.4-.3-1.2-.4-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-2 .4-2.4.2-.6.6-1 1-1.5.4-.4.9-.7 1.5-1 .4-.2 1.2-.3 2.4-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.6.2-1.9.3-.5.2-.8.4-1.2.8-.4.4-.6.7-.8 1.2-.1.3-.3.9-.3 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1 .2 1.6.3 1.9.2.5.4.8.8 1.2.4.4.7.6 1.2.8.3.1.9.3 1.9.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.6-.2 1.9-.3.5-.2.8-.4 1.2-.8.4-.4.6-.7.8-1.2.1-.3.3-.9.3-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.6-.3-1.9-.2-.5-.4-.8-.8-1.2-.4-.4-.7-.6-1.2-.8-.3-.1-.9-.3-1.9-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4zm5.7-2a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z"/></svg></a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="content-card">
-  <div class="breadcrumb"><a href="/pengajuan">Pengajuan</a> &nbsp;/&nbsp; Formulir Permohonan</div>
+  <div class="content-card">
+    <div class="breadcrumb"><a href="/pengajuan">Pengajuan</a> &nbsp;/&nbsp; Formulir Permohonan</div>
 
-  <div class="eyebrow">Layanan Pertanahan</div>
-  <h1>Formulir Permohonan</h1>
-  <p class="subtitle">Berikut persyaratan umum dan daftar dokumen formulir permohonan yang dapat Anda ajukan secara online.</p>
+    <div class="eyebrow">Layanan Pertanahan</div>
+    <h1>Formulir Permohonan</h1>
+    <p class="subtitle">Berikut persyaratan umum dan daftar dokumen formulir permohonan yang dapat Anda ajukan secara online.</p>
 
-  <div class="surat-list">
+    <div class="surat-list">
 
-    <div class="surat-item">
-      <div class="surat-columns">
-        <div class="surat-col">
-          <div class="surat-col-icon">📋</div>
-          <h3>Persyaratan</h3>
-          <ol>
-            <li>Fotokopi KTP pemohon (dan KTP penerima kuasa jika dikuasakan).</li>
-            <li>Fotokopi Kartu Keluarga (KK), jika diperlukan.</li>
-            <li>Sertipikat asli/fotokopi sertipikat atau bukti kepemilikan tanah (girik, Letter C, dsb).</li>
-            <li>Materai Rp 10.000.</li>
-            <li>Disaksikan 2 orang saksi (untuk pernyataan yang memerlukan saksi).</li>
-            <li>Bukti pembayaran pajak terkait (BPHTB/PPh), jika berlaku.</li>
-          </ol>
+      <div class="surat-item">
+        <div class="surat-columns">
+          <div class="surat-col">
+            <div class="surat-col-icon">📋</div>
+            <h3>Persyaratan Umum</h3>
+            <ol>
+              <li>Mengisi formulir permohonan.</li>
+              <li>Fotokopi KTP pemohon.</li>
+              <li>Dokumen kepemilikan/penguasaan tanah.</li>
+              <li>Materai Rp 10.000 (jika diperlukan).</li>
+              <li>Bukti bayar pajak terkait (BPHTB/PPh/PBB), jika berlaku.</li>
+            </ol>
+          </div>
+          <div class="surat-col">
+            <div class="surat-col-icon">📄</div>
+            <h3>Keterangan Umum</h3>
+            <ol>
+              <li>Persyaratan menyesuaikan jenis layanan.</li>
+              <li>Dokumen harus lengkap dan valid.</li>
+              <li>Permohonan yang belum lengkap akan dikembalikan.</li>
+              <li>Petugas dapat meminta dokumen tambahan apabila diperlukan.</li>
+              <li>Status permohonan dapat dipantau melalui sistem.</li>
+            </ol>
+          </div>
         </div>
-        <div class="surat-col">
-          <div class="surat-col-icon">📄</div>
-          <h3>Keterangan</h3>
-          <ol>
-            <li>Identitas diri pemohon (dan kuasa, jika dikuasakan).</li>
-            <li>Data objek tanah: luas, letak, dan penggunaan tanah yang dimohon.</li>
-            <li>Pernyataan tanah tidak dalam sengketa.</li>
-            <li>Pernyataan penguasaan fisik/kepemilikan tanah secara sah.</li>
-          </ol>
+      </div>
+      <p class="surat-note">Catatan: rincian persyaratan di atas berlaku umum untuk seluruh jenis formulir permohonan pada Daftar Dokumen di bawah. Persyaratan tambahan yang spesifik untuk masing-masing jenis permohonan dapat berbeda dan akan disampaikan oleh petugas loket.</p>
+
+    </div>
+
+    <div class="dokumen-section-title">Daftar Dokumen</div>
+ <p class="dokumen-section-sub">Cari, isi formulir secara online, atau unduh form kosong untuk diisi manual. Pengguna wajib membaca persyaratan sesuai surat yang dituju sebelum mengunduh atau mengisi form.</p>
+    <div class="dokumen-search-wrap">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+      <input type="text" class="dokumen-search-input" id="dokumenSearch" placeholder="Cari nama dokumen, misal: balik nama, sertipikat, roya...">
+      <button type="button" class="dokumen-search-clear" id="dokumenSearchClear" aria-label="Hapus pencarian">&times;</button>
+    </div>
+
+    <p class="dokumen-count" id="dokumenCount"></p>
+
+    <div class="dokumen-grid" id="dokumenGrid">
+      <div class="dokumen-card" data-nama="Formulir Permohonan Legalisir Sertipikat">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Legalisir Sertipikat</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-legalisir-sertipikat" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-legalisir-sertipikat.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Pengurusan Sertipikat">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Pengurusan Sertipikat</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-pengurusan-sertipikat" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-pengurusan-sertipikat.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Pengambilan Sertipikat Tanah">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Pengambilan Sertipikat Tanah</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-pengambilan-sertipikat" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-pengambilan-sertipikat.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Pendaftaran Tanah">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Pendaftaran Tanah</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-pendaftaran-tanah" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-pendaftaran-tanah.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Balik Nama Hak atas Tanah">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Balik Nama Hak atas Tanah</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-balik-nama" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-balik-nama.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Pemecahan/Penggabungan Bidang Tanah">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Pemecahan/Penggabungan Bidang Tanah</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-pemecahan-penggabungan" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-pemecahan-penggabungan.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Roya Hak Tanggungan">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Roya Hak Tanggungan</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-roya-hak-tanggungan" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-roya-hak-tanggungan.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+
+      <div class="dokumen-card" data-nama="Formulir Permohonan Pengukuran Bidang Tanah">
+        <div class="dokumen-card-head">
+          <div class="dokumen-icon">🔖</div>
+          <div class="dokumen-nama">Formulir Permohonan Pengukuran Bidang Tanah</div>
+        </div>
+        <button type="button" class="dokumen-syarat-btn" onclick="openSyaratModal(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          Lihat Persyaratan
+        </button>
+        <div class="dokumen-actions">
+          <a href="/isi-online/permohonan-pengukuran-bidang" class="dokumen-btn btn-isi-online disabled">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+            Isi Online
+          </a>
+          <a href="/unduh-form/permohonan-pengukuran-bidang.pdf" class="dokumen-btn btn-unduh disabled" download>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
+            Unduh Form
+          </a>
+        </div>
+      </div>
+    <div class="dokumen-empty" id="dokumenEmpty">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+      <div>Tidak ada dokumen yang cocok dengan pencarian Anda.</div>
+    </div>
+  </div>
+
+  <div class="syarat-modal-overlay" id="syaratModalOverlay">
+    <div class="syarat-modal">
+      <div class="syarat-modal-header">
+        <div>
+          <h3 id="syaratModalTitle">Persyaratan</h3>
+          <p>Baca dan pahami persyaratan berikut sebelum mengisi atau mengunduh formulir.</p>
+        </div>
+        <button type="button" class="syarat-modal-close" id="syaratModalClose" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="syarat-modal-body">
+        <ul class="syarat-modal-list" id="syaratModalList"></ul>
+      </div>
+      <div class="syarat-modal-footer">
+        <button type="button" class="syarat-modal-ack" id="syaratModalAck">Saya Sudah Membaca &amp; Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <!-- /.page-wrap -->
+
+  <footer class="site-footer" style="background:#dbe7f5;color:#1e2a3a;padding:48px 24px 24px;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:32px;">
+      <div>
+        <h3 style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:16px;">Kantor Pertanahan</h3>
+        <p style="font-size:14px;color:#33475b;line-height:1.7;">Melayani urusan pertanahan masyarakat secara profesional, transparan, dan online.</p>
+      </div>
+
+      <div>
+        <h3 style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:16px;">Kontak</h3>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:14px;color:#33475b;">
+          <svg style="width:18px;height:18px;fill:#1e3a5f;flex-shrink:0;margin-top:2px;" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.7 5.1 6.5 6.5l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1v3.6c0 .6-.4 1-1 1C10.6 21.1 2.9 13.4 2.9 3.9c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.3 0 .7-.2 1l-2.3 2.3z"/></svg>
+          <span>(0341) 123-4567</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:14px;color:#33475b;">
+          <svg style="width:18px;height:18px;fill:#1e3a5f;flex-shrink:0;margin-top:2px;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span>layanan@kantorpertanahan.go.id</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#33475b;">
+          <svg style="width:18px;height:18px;fill:#1e3a5f;flex-shrink:0;margin-top:2px;" viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+          <span>Jl. Raya Pertanahan No. 10, Malang, Jawa Timur</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:16px;">Ikuti Kami</h3>
+        <div style="display:flex;gap:12px;">
+          <a href="#" style="width:36px;height:36px;border-radius:50%;background:#c3d6ec;display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;fill:#1e3a5f;" viewBox="0 0 24 24"><path d="M23 4.9c-.8.4-1.7.6-2.6.8 1-.6 1.7-1.5 2-2.6-.9.5-1.9.9-3 1.1-.9-.9-2.1-1.5-3.4-1.5-2.6 0-4.7 2.1-4.7 4.7 0 .4 0 .7.1 1-3.9-.2-7.4-2.1-9.7-4.9-.4.7-.6 1.5-.6 2.3 0 1.6.8 3 2.1 3.9-.8 0-1.5-.2-2.1-.6v.1c0 2.3 1.6 4.2 3.8 4.6-.4.1-.8.2-1.2.2-.3 0-.6 0-.8-.1.6 1.9 2.3 3.2 4.4 3.3-1.6 1.3-3.6 2-5.8 2-.4 0-.8 0-1.1-.1 2.1 1.3 4.5 2.1 7.1 2.1 8.5 0 13.1-7 13.1-13.1v-.6c.9-.6 1.7-1.4 2.3-2.3z"/></svg></a>
+          <a href="#" style="width:36px;height:36px;border-radius:50%;background:#c3d6ec;display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;fill:#1e3a5f;" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="#" style="width:36px;height:36px;border-radius:50%;background:#c3d6ec;display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;fill:#1e3a5f;" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .2 2.4.4.6.2 1 .6 1.5 1 .4.4.7.9 1 1.5.2.4.3 1.2.4 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 2-.4 2.4-.2.6-.6 1-1 1.5-.4.4-.9.7-1.5 1-.4.2-1.2.3-2.4.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.2-2.4-.4-.6-.2-1-.6-1.5-1-.4-.4-.7-.9-1-1.5-.2-.4-.3-1.2-.4-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-2 .4-2.4.2-.6.6-1 1-1.5.4-.4.9-.7 1.5-1 .4-.2 1.2-.3 2.4-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.6.2-1.9.3-.5.2-.8.4-1.2.8-.4.4-.6.7-.8 1.2-.1.3-.3.9-.3 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1 .2 1.6.3 1.9.2.5.4.8.8 1.2.4.4.7.6 1.2.8.3.1.9.3 1.9.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.6-.2 1.9-.3.5-.2.8-.4 1.2-.8.4-.4.6-.7.8-1.2.1-.3.3-.9.3-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.6-.3-1.9-.2-.5-.4-.8-.8-1.2-.4-.4-.7-.6-1.2-.8-.3-.1-.9-.3-1.9-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4zm5.7-2a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z"/></svg></a>
         </div>
       </div>
     </div>
 
-  </div>
-
-  <div class="dokumen-section-title">Daftar Dokumen</div>
-  <p class="dokumen-section-sub">Cari, isi formulir secara online, atau unduh form kosong untuk diisi manual.</p>
-
-  <div class="dokumen-search-wrap">
-    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
-    <input type="text" class="dokumen-search-input" id="dokumenSearch" placeholder="Cari nama dokumen, misal: balik nama, sertipikat, roya...">
-    <button type="button" class="dokumen-search-clear" id="dokumenSearchClear" aria-label="Hapus pencarian">&times;</button>
-  </div>
-
-  <p class="dokumen-count" id="dokumenCount"></p>
-
-  <div class="dokumen-grid" id="dokumenGrid">
-    <div class="dokumen-card" data-nama="Formulir Permohonan Pengurusan Sertipikat">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Pengurusan Sertipikat</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-pengurusan-sertipikat" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-pengurusan-sertipikat.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
+    <div style="max-width:1100px;margin:36px auto 0;padding-top:20px;border-top:1px solid #c3d6ec;text-align:center;font-size:13px;color:#4a5f78;">
+      &copy; 2026 Kantor Pertanahan. Seluruh hak cipta dilindungi.
     </div>
+  </footer>
 
-    <div class="dokumen-card" data-nama="Formulir Permohonan Pengambilan Sertipikat Tanah">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Pengambilan Sertipikat Tanah</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-pengambilan-sertipikat" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-pengambilan-sertipikat.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Pendaftaran Tanah">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Pendaftaran Tanah</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-pendaftaran-tanah" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-pendaftaran-tanah.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Balik Nama Hak atas Tanah">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Balik Nama Hak atas Tanah</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-balik-nama" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-balik-nama.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Pemecahan/Penggabungan Bidang Tanah">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Pemecahan/Penggabungan Bidang Tanah</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-pemecahan-penggabungan" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-pemecahan-penggabungan.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Roya Hak Tanggungan">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Roya Hak Tanggungan</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-roya-hak-tanggungan" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-roya-hak-tanggungan.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Peningkatan Hak Atas Tanah">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Peningkatan Hak Atas Tanah</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-peningkatan-hak" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-peningkatan-hak.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Perpanjangan/Pembaruan Hak">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Perpanjangan/Pembaruan Hak</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-perpanjangan-hak" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-perpanjangan-hak.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Pengukuran Bidang Tanah">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Pengukuran Bidang Tanah</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-pengukuran-bidang" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-pengukuran-bidang.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-
-    <div class="dokumen-card" data-nama="Formulir Permohonan Lainnya">
-      <div class="dokumen-card-head">
-        <div class="dokumen-icon">🔖</div>
-        <div class="dokumen-nama">Formulir Permohonan Lainnya</div>
-      </div>
-      <div class="dokumen-actions">
-        <a href="/isi-online/permohonan-lainnya" class="dokumen-btn btn-isi-online">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
-          Isi Online
-        </a>
-        <a href="/unduh-form/permohonan-lainnya.pdf" class="dokumen-btn btn-unduh" download>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
-          Unduh Form
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="dokumen-empty" id="dokumenEmpty">
-    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.49 19l-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
-    <div>Tidak ada dokumen yang cocok dengan pencarian Anda.</div>
-  </div>
-</div>
-
-<footer class="site-footer" style="background:#dbe7f5;color:#1e2a3a;padding:48px 24px 24px;margin-top:20px;">
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:32px;">
-    <div>
-      <h3 style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:16px;">Kantor Pertanahan</h3>
-      <p style="font-size:14px;color:#33475b;line-height:1.7;">Melayani urusan pertanahan masyarakat secara profesional, transparan, dan online.</p>
-    </div>
-
-    <div>
-      <h3 style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:16px;">Kontak</h3>
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:14px;color:#33475b;">
-        <svg style="width:18px;height:18px;fill:#1e3a5f;flex-shrink:0;margin-top:2px;" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.7 5.1 6.5 6.5l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1v3.6c0 .6-.4 1-1 1C10.6 21.1 2.9 13.4 2.9 3.9c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.3 0 .7-.2 1l-2.3 2.3z"/></svg>
-        <span>(0341) 123-4567</span>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:14px;color:#33475b;">
-        <svg style="width:18px;height:18px;fill:#1e3a5f;flex-shrink:0;margin-top:2px;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        <span>layanan@kantorpertanahan.go.id</span>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#33475b;">
-        <svg style="width:18px;height:18px;fill:#1e3a5f;flex-shrink:0;margin-top:2px;" viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
-        <span>Jl. Raya Pertanahan No. 10, Malang, Jawa Timur</span>
-      </div>
-    </div>
-
-    <div>
-      <h3 style="font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#1e3a5f;margin-bottom:16px;">Ikuti Kami</h3>
-      <div style="display:flex;gap:12px;">
-        <a href="#" style="width:36px;height:36px;border-radius:50%;background:#c3d6ec;display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;fill:#1e3a5f;" viewBox="0 0 24 24"><path d="M23 4.9c-.8.4-1.7.6-2.6.8 1-.6 1.7-1.5 2-2.6-.9.5-1.9.9-3 1.1-.9-.9-2.1-1.5-3.4-1.5-2.6 0-4.7 2.1-4.7 4.7 0 .4 0 .7.1 1-3.9-.2-7.4-2.1-9.7-4.9-.4.7-.6 1.5-.6 2.3 0 1.6.8 3 2.1 3.9-.8 0-1.5-.2-2.1-.6v.1c0 2.3 1.6 4.2 3.8 4.6-.4.1-.8.2-1.2.2-.3 0-.6 0-.8-.1.6 1.9 2.3 3.2 4.4 3.3-1.6 1.3-3.6 2-5.8 2-.4 0-.8 0-1.1-.1 2.1 1.3 4.5 2.1 7.1 2.1 8.5 0 13.1-7 13.1-13.1v-.6c.9-.6 1.7-1.4 2.3-2.3z"/></svg></a>
-        <a href="#" style="width:36px;height:36px;border-radius:50%;background:#c3d6ec;display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;fill:#1e3a5f;" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
-        <a href="#" style="width:36px;height:36px;border-radius:50%;background:#c3d6ec;display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;fill:#1e3a5f;" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 2 .2 2.4.4.6.2 1 .6 1.5 1 .4.4.7.9 1 1.5.2.4.3 1.2.4 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 2-.4 2.4-.2.6-.6 1-1 1.5-.4.4-.9.7-1.5 1-.4.2-1.2.3-2.4.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2-.2-2.4-.4-.6-.2-1-.6-1.5-1-.4-.4-.7-.9-1-1.5-.2-.4-.3-1.2-.4-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-2 .4-2.4.2-.6.6-1 1-1.5.4-.4.9-.7 1.5-1 .4-.2 1.2-.3 2.4-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.6.2-1.9.3-.5.2-.8.4-1.2.8-.4.4-.6.7-.8 1.2-.1.3-.3.9-.3 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1 .2 1.6.3 1.9.2.5.4.8.8 1.2.4.4.7.6 1.2.8.3.1.9.3 1.9.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.6-.2 1.9-.3.5-.2.8-.4 1.2-.8.4-.4.6-.7.8-1.2.1-.3.3-.9.3-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.6-.3-1.9-.2-.5-.4-.8-.8-1.2-.4-.4-.7-.6-1.2-.8-.3-.1-.9-.3-1.9-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4zm5.7-2a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z"/></svg></a>
-      </div>
-    </div>
-  </div>
-
-  <div style="max-width:1100px;margin:36px auto 0;padding-top:20px;border-top:1px solid #c3d6ec;text-align:center;font-size:13px;color:#4a5f78;">
-    &copy; 2026 Kantor Pertanahan. Seluruh hak cipta dilindungi.
-  </div>
-</footer>
-
+<script src="{{ asset('js/syarat-data.js') }}"></script>
 <script>
   const searchInput = document.getElementById('dokumenSearch');
   const clearBtn = document.getElementById('dokumenSearchClear');
@@ -691,17 +901,14 @@
   const emptyState = document.getElementById('dokumenEmpty');
   const countLabel = document.getElementById('dokumenCount');
   const totalCount = cards.length;
-
   function escapeRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
-
   function highlight(text, query) {
     if (!query) return text;
     const regex = new RegExp('(' + escapeRegExp(query) + ')', 'ig');
     return text.replace(regex, '<mark>$1</mark>');
   }
-
   function updateCount(visible) {
     if (visible === totalCount) {
       countLabel.textContent = totalCount + ' dokumen tersedia';
@@ -709,12 +916,10 @@
       countLabel.textContent = 'Menampilkan ' + visible + ' dari ' + totalCount + ' dokumen';
     }
   }
-
   function runSearch() {
     const query = searchInput.value.trim();
     const queryLower = query.toLowerCase();
     let visibleCount = 0;
-
     clearBtn.style.display = query ? 'flex' : 'none';
 
     cards.forEach(card => {
@@ -730,14 +935,11 @@
         card.style.display = 'none';
       }
     });
-
     grid.style.display = visibleCount > 0 ? 'grid' : 'none';
     emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
     updateCount(visibleCount);
   }
-
   searchInput.addEventListener('input', runSearch);
-
   clearBtn.addEventListener('click', function () {
     searchInput.value = '';
     searchInput.focus();
@@ -745,7 +947,47 @@
   });
 
   updateCount(totalCount);
-</script>
+  /* ===== Persyaratan per jenis surat + kunci tombol sebelum dibaca ===== */
+  // Data syaratData & defaultSyarat sekarang dimuat dari file eksternal syarat-data.js
 
+  const syaratOverlay = document.getElementById('syaratModalOverlay');
+  const syaratTitle = document.getElementById('syaratModalTitle');
+  const syaratList = document.getElementById('syaratModalList');
+  const syaratAckBtn = document.getElementById('syaratModalAck');
+  const syaratCloseBtn = document.getElementById('syaratModalClose');
+  let activeSyaratCard = null;
+  function openSyaratModal(triggerEl) {
+    const card = triggerEl.closest('.dokumen-card');
+    const nama = card.getAttribute('data-nama');
+    const list = syaratData[nama] || defaultSyarat;
+    activeSyaratCard = card;
+    syaratTitle.textContent = 'Persyaratan: ' + nama;
+    syaratList.innerHTML = list.map(item => '<li>' + item + '</li>').join('');
+    syaratOverlay.classList.add('open');
+  }
+  function closeSyaratModal() {
+    syaratOverlay.classList.remove('open');
+    activeSyaratCard = null;
+  }
+  function unlockCardButtons(card) {
+    if (!card) return;
+    card.classList.add('syarat-read');
+    const btnOnline = card.querySelector('.btn-isi-online');
+    const btnUnduh = card.querySelector('.btn-unduh');
+    if (btnOnline) btnOnline.classList.remove('disabled');
+    if (btnUnduh) btnUnduh.classList.remove('disabled');
+  }
+  syaratAckBtn.addEventListener('click', function () {
+    unlockCardButtons(activeSyaratCard);
+    closeSyaratModal();
+  });
+  syaratCloseBtn.addEventListener('click', closeSyaratModal);
+  syaratOverlay.addEventListener('click', function (e) {
+    if (e.target === syaratOverlay) closeSyaratModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && syaratOverlay.classList.contains('open')) closeSyaratModal();
+  });
+</script>
 </body>
 </html>
