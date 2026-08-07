@@ -32,7 +32,7 @@
     padding: 24px 32px;
     background-image:
       linear-gradient(180deg, rgba(10,14,20,0.45) 0%, rgba(10,14,20,0.35) 50%, rgba(10,14,20,0.6) 100%),
-      url('malang.jpg');
+      url('images/malang.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -674,7 +674,7 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.42l-2.34-2.34a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
             Isi Online
           </a>
-          <a href="/unduh-form/permohonan-legalisir-sertipikat.pdf" class="dokumen-btn btn-unduh disabled" download>
+         <a href="/unduh-form/permohonan-legalisir-sertipikat.pdf" class="dokumen-btn btn-unduh disabled" download>
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9h-4V3H9v8H5l7 7 7-7z"/></svg>
             Unduh Form
           </a>

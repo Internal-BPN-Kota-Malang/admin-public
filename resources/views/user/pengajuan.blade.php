@@ -100,8 +100,8 @@
 
 <!-- KONTEN -->
 <div class="content-card bg-white shadow-lg mx-auto p-4 p-md-5 text-center" style="max-width:1250px;">
-  <h1 class="fw-medium mb-2" style="color:#1e2a3a;">Pengajuan</h1>
-  <p class="text-secondary mb-4">Silakan pilih jenis surat/formulir yang ingin diajukan di bawah ini:</p>
+  <h1 class="fw-medium mb-2" style="color:#1e2a3a;">Layanan Kategorisasi</h1>
+  <p class="text-secondary mb-4">Silakan pilih kategori surat/formulir yang ingin diajukan di bawah ini:</p>
 
   <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 text-start mx-auto" style="max-width:1150px;">
 

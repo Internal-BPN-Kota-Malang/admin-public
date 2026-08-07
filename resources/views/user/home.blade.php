@@ -301,7 +301,7 @@
   <div class="menu-utama-grid">
     <a href="/pengajuan" class="menu-utama-card">
       <div class="menu-utama-icon">📝</div>
-      <div class="menu-utama-label">Pengajuan</div>
+      <div class="menu-utama-label">Layanan</div>
     </a>
     <a href="/informasi" class="menu-utama-card">
       <div class="menu-utama-icon">ℹ️</div>

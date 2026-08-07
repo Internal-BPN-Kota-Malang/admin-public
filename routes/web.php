@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\FormPdfController;
 
 // ======================
 // ROUTE UNTUK USER (tanpa login)
@@ -37,6 +38,17 @@ Route::get('/formulir-permohonan', function () {
     return view('user.formulir-permohonan');
 })->name('user.formulir-permohonan');
 
+Route::get('/isi-online/permohonan-legalisir-sertipikat', function () {
+    return view('user.onlinePermohon-legalisirsertipikat');
+})->name('isi-online.legalisir-sertipikat');
+// Route untuk generate PDF
+Route::post('/generate-pdf/legalisir-sertipikat', [FormPdfController::class, 'generateLegalisir'])
+    ->name('pdf.legalisir.generate');
+// PDF kosong (form blank untuk diisi manual)
+Route::get('/unduh-form/permohonan-legalisir-sertipikat.pdf', [FormPdfController::class, 'downloadBlank'])
+    ->name('form.legalisir.blank');
+
+    
 Route::get('/formulir-permohonan/tambah', function () {
     return view('user.TambahFormulir');
 })->name('user.formulir-permohonan.tambah');
